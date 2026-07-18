@@ -14,11 +14,20 @@ Skill: scroll-film-studio · Lane B (Higgsfield Seedance 2.0) · resumable hando
 - [x] Interview + concept chosen: **THE SPARK**
 - [x] Opening keyframe generated — Nano Banana Pro, job `7d639995-57b0-454d-b030-303e7a6cd928`
       (2752×1536, 16:9): https://d8j0ntlcm91z4.cloudfront.net/user_34vsx3XR3W7YnkGCFxTxsQ6I7wp/hf_20260718_154324_7d639995-57b0-454d-b030-303e7a6cd928.png
-- [ ] BLOCKED: container egress policy denies `d8j0ntlcm91z4.cloudfront.net` → cannot download footage.
-      Waiting for user to allow `*.cloudfront.net` in environment Network access (or new session after change).
-- [ ] Draft chain 5×5s @ 480p/fast (7.5 cr each = 37.5 cr, confirmed via get_cost) — NOT started, no credits spent beyond keyframe.
-- [ ] Junction SSIM gates ≥0.88 · assemble (~300 frames @1280 q4) · build page · verify (jank p95/max) · user approves → master 1080p/std (45 cr × 5 = 225 cr).
+- [x] 2026-07-18 (session 2): network re-checked — egress policy blocks ALL external hosts
+      (cloudfront, higgsfield.ai, CDNs → proxy 403); only npm/pypi bypass. User chose **"Хоёуланг нь"**:
+      ship Lane A pure-code now, run Lane B footage chain when network opens.
+- [x] **Lane A SHIPPED** — bespoke GSAP+Lenis scroll-film (`index.html` + `assets/`, all vendored
+      from npm, zero CDN). 5 pinned chapters matching the storyboard 1:1, after-film sections, dev
+      contract (`?jump`/`__ready`), reduced-motion support. Verified: 11 screenshots + jank
+      p95 17ms / max 45–77ms (spikes = one-time pin-boundary rasters, headless no-GPU).
+- [ ] Lane B (when network opens): draft chain 5×5s @ 480p/fast (7.5 cr each = 37.5 cr, confirmed
+      via get_cost) — NOT started, no credits spent beyond keyframe.
+- [ ] Junction SSIM gates ≥0.88 · assemble (~300 frames @1280 q4) · swap footage scrub-engine into
+      the built page (chapter visuals → canvas frames; copy/beats/after-film stay) · verify →
+      user approves → master 1080p/std (45 cr × 5 = 225 cr).
 - Balance at start: 5,288 cr (Max plan). generate_audio MUST be false (defaults true on seedance_2_0!).
+- Placeholder to confirm with user: contact email `hello@solenne.agency` (CTA + footer), socials `#`.
 
 ## Chain contract (per clip)
 generate_video seedance_2_0 {duration 5, resolution 480p, mode fast, generate_audio false, aspect 16:9,
@@ -39,4 +48,10 @@ CONT = "Continue the exact same shot from the reference frame, identical framing
 Services (AI marketing / AI website builder / brand systems) · selected work grid · manifesto line · CTA "Start your spark" · contact + socials. Copy: confident, minimal, EN (confirm language with user — interview was in Mongolian).
 
 ## Resume instructions
-Read this file, verify cloudfront reachable (curl the keyframe URL), then run the draft chain per contract above. Working dirs in scratchpad: spark/{keyframes,clips,frames,junctions}. Deliverable site lives at repo root (index.html + frames/ + assets/), branch `claude/feature-configuration-myx2o8`.
+Read this file, verify cloudfront reachable (curl the keyframe URL — proxy 403 means still blocked),
+then run the draft chain per contract above. Working dirs in scratchpad: spark/{keyframes,clips,frames,junctions}.
+Deliverable site lives at repo root (`index.html` + `assets/`), branch `claude/higgsfield-deploy-continue-xgsa3s`
+(supersedes `claude/feature-configuration-myx2o8`). Lane A film is live in `index.html`; when footage arrives,
+replace each chapter's visual layer with the canvas scrub engine (engine.md §Scrub-engine) — keep the pinned
+structure, beats, header readout and after-film sections as-is. Verify harness: skill `scripts/verify.js`
+with `CHROME_PATH=/opt/pw-browsers/chromium`, serve with `python3 -m http.server`.
