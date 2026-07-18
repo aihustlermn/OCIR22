@@ -3,8 +3,21 @@
 Skill: scroll-film-studio · resumable handoff. **Site v1 SHIPPED on Lane A (pure-code).**
 Lane B (Seedance footage) remains blocked by egress policy — see below.
 
+## v2 — Mongolian localization (SHIPPED)
+- Rebrand: **AISOLENNE.MN** (wordmark Unbounded latin; `.MN` in acid). All copy Mongolian.
+- Type change (Cyrillic Ө/Ү support — Unbounded/Space Grotesk/Space Mono have none):
+  display **Tektur** · body **Golos Text** · mono **JetBrains Mono** (latin+cyr+cyr-ext
+  subsets vendored with unicode-range; Unbounded kept latin-only for the wordmark).
+- Services ×4: AI Видео · AI Фото · AI Маркетинг · 3D Вэбсайт. Work grid reframed as
+  capabilities (no fictional case studies).
+- New #cred section: Higgsfield Academy credential card — The AI Filmmaking Pipeline /
+  Cinema Studio Pro Guide / Ai Hustler / HFA-2026-5KUVESXALFDL / 2026.07.17.
+- Contacts: CTA + finale + footer → https://www.instagram.com/aisolenne.mn/ ; tel +976 9636-9633.
+- Verified (screens + jank p95 17ms, same profile). Artifact preview:
+  https://claude.ai/code/artifact/edb47b25-1621-4c4e-9cc0-05325ef67e02
+
 ## Brand
-- **SOLENNE** — AI agency: marketing + website builder.
+- **SOLENNE** — AI agency: marketing + website builder. (v2: public name AISOLENNE.MN)
 - Logo: acid-green atomic starburst (8-point star + two elliptical orbit swooshes) on black — built as inline SVG in `index.html` (header, footer, work tile) and mirrored in canvas (`drawStarburst`).
 - Palette: acid green `#C6FF16` · black `#050505` · greenish white `#F4FFE0` · muted `#8A9284`.
 - Type: display **Unbounded** · body **Space Grotesk** · HUD/mono **Space Mono** — vendored woff2 in `assets/fonts/` (variable files for Unbounded + Space Grotesk).
