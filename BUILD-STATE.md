@@ -48,17 +48,23 @@ Lane B (Seedance footage) remains blocked by egress policy — see below.
   isolated >50ms frames at first-paint of sections (positions non-deterministic — scheduler
   noise of the GPU-less rasterizer; one run fully clean). Judged sound for real hardware.
 
-## Higgsfield hosting deploy — BLOCKED (egress), website already created
-- User chose Higgsfield hosting. `create_website` succeeded:
-  website_id `5bd453bf-4131-412b-aeb4-314ac8c6172a`, slug `aisolenne`, type website
-  (category param required by server; "other" accepted). Live URL will be `aisolenne.<host>`.
-- `git clone https://apps-repos.higgsfield.ai/...` → CONNECT 403: **apps-repos.higgsfield.ai
-  denied by egress policy** (same class as cloudfront). Do not retry; policy change needed.
-- To unblock: allow `*.higgsfield.ai` (and ideally `*.cloudfront.net`) in the environment's
-  Network access, then: website_repo_access (fresh token) → clone → port index.html into the
-  TanStack Start app per get_website_creation_instructions flow (read references/website-flow.md
-  + scroll-scrub*.md; our GSAP/canvas film can be embedded) → app-meta.json cover+metadata
-  (references/app-cover.md) → commit/push → deploy_website → website_status for live URL.
+## Higgsfield hosting — DEPLOYED ✅ (egress unblocked by user 2026-07-18)
+- **LIVE: https://aisolenne.higgsfield.app** — website_id `5bd453bf-4131-412b-aeb4-314ac8c6172a`,
+  slug `aisolenne`, type website (server also requires `category`; "other" accepted).
+- Port shape: TanStack Start app — `app/src/spark.css` (extracted styles, fonts at
+  /assets/fonts/), `app/src/spark-markup.ts` (body markup via dangerouslySetInnerHTML),
+  `app/public/assets/spark.js` + vendored gsap/ScrollTrigger/lenis loaded sequentially in a
+  useEffect (SSR-safe). `__root.tsx` lang="mn". `app/design-brief.md` documents the ported
+  locked design (palette = owner's explicit brand → banned-palette override).
+- Cover + metadata done per app-cover.md: gpt_image_2 cover (job f38c8856), compose_cover.py
+  OG capsule, starburst favicon (chromium-rendered SVG). app-meta.json fully filled
+  (og_title AISOLENNE.MN; og/cover/favicon URLs on d2ol7oe51mr4n9.cloudfront.net).
+- Verified: local `bun run typecheck` + `bun run build` clean; live smoke: page + all 5
+  runtime assets + fonts return 200, SSR markup present. (In-container browser can't reach
+  higgsfield.app through the proxy TLS layer — curl-level verification only.)
+- NOT published to Higgsfield community feed (user hasn't asked). To publish later:
+  deploy is current, metadata filled → just `publish_website`.
+- Repo token in this file's history is scoped+rotating; fresh one via website_repo_access.
 
 ## Lane B — still BLOCKED (unchanged)
 - Egress policy denies `d8j0ntlcm91z4.cloudfront.net` (403 CONNECT; also higgsfield.ai,
