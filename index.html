@@ -199,9 +199,23 @@ img,svg{max-width:100%;display:block;}
 }
 @keyframes cue{0%,100%{transform:scaleY(.3);transform-origin:top;}50%{transform:scaleY(1);}}
 
-.beat.finale{justify-content:flex-end;padding-bottom:13vh;}
-.beat.finale .scroll-cue{color:var(--acid);opacity:.85;}
-.beat.finale .scroll-cue::after{background:linear-gradient(var(--acid),transparent);}
+.beat.finale{justify-content:flex-end;padding-bottom:15vh;}
+.beat.finale .scroll-cue{
+  color:var(--acid);opacity:1;bottom:3vh;
+  font-size:clamp(.72rem,1.1vw,.9rem);font-weight:700;letter-spacing:.26em;
+  gap:.7rem;animation:cuebob 1.7s ease-in-out infinite;
+}
+.beat.finale .scroll-cue::before{
+  content:'';width:12px;height:12px;order:2;
+  border-right:2.5px solid var(--acid);border-bottom:2.5px solid var(--acid);
+  transform:rotate(45deg);
+}
+.beat.finale .scroll-cue::after{
+  order:3;height:40px;width:2px;
+  background:linear-gradient(var(--acid),transparent);
+}
+@keyframes cuebob{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,12px);}}
+@media(prefers-reduced-motion:reduce){.beat.finale .scroll-cue{animation:none;}}
 .beat .cta-mini{
   pointer-events:auto;margin-top:2rem;display:inline-block;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;
@@ -430,7 +444,7 @@ noscript .beat{position:relative;opacity:1;}
       <div class="kicker">05 / Одны орд</div>
       <h2>Нэг оч.<br>Бүхэл систем.</h2>
       <a class="cta-mini" href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener noreferrer">Хамтран ажиллах</a>
-      <div class="scroll-cue">Доош үргэлжилнэ</div>
+      <div class="scroll-cue">Доош гүйлгэж үргэлжлүүл</div>
     </div>
   </div>
 </div>
