@@ -199,7 +199,9 @@ img,svg{max-width:100%;display:block;}
 }
 @keyframes cue{0%,100%{transform:scaleY(.3);transform-origin:top;}50%{transform:scaleY(1);}}
 
-.beat.finale{justify-content:flex-end;padding-bottom:10vh;}
+.beat.finale{justify-content:flex-end;padding-bottom:13vh;}
+.beat.finale .scroll-cue{color:var(--acid);opacity:.85;}
+.beat.finale .scroll-cue::after{background:linear-gradient(var(--acid),transparent);}
 .beat .cta-mini{
   pointer-events:auto;margin-top:2rem;display:inline-block;
   font-family:var(--mono);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;
@@ -427,7 +429,8 @@ noscript .beat{position:relative;opacity:1;}
     <div class="beat finale" data-in="0.875" data-peak="0.94" data-out="2">
       <div class="kicker">05 / Одны орд</div>
       <h2>Нэг оч.<br>Бүхэл систем.</h2>
-      <a class="cta-mini" href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener">Очоо асаа</a>
+      <a class="cta-mini" href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener noreferrer">Хамтран ажиллах</a>
+      <div class="scroll-cue">Доош үргэлжилнэ</div>
     </div>
   </div>
 </div>
@@ -435,31 +438,31 @@ noscript .beat{position:relative;opacity:1;}
 <!-- ============ SERVICES ============ -->
 <section class="section" id="services">
   <div class="sec-kicker">Юу бүтээдэг вэ</div>
-  <h2 class="sec-title">Дөрвөн энжин. Хүчээ нэгтгэдэг нэг систем.</h2>
+  <h2 class="sec-title">Дөрвөн үйлчилгээ. Хүчээ нэгтгэсэн нэг систем.</h2>
   <div class="svc-grid">
     <article class="svc">
-      <span class="idx">ЭНЖИН.01</span>
+      <span class="idx">ҮЙЛЧИЛГЭЭ 01</span>
       <h3>AI Видео</h3>
       <p>Кино чанартай сурталчилгаа, бүтээгдэхүүний видео — зураг авалтгүй, багийн зардалгүй, хэдхэн хоногт.</p>
       <ul><li>Сурталчилгааны видео</li><li>Бүтээгдэхүүний видео</li><li>Контент цуврал</li></ul>
     </article>
     <article class="svc">
-      <span class="idx">ЭНЖИН.02</span>
+      <span class="idx">ҮЙЛЧИЛГЭЭ 02</span>
       <h3>AI Фото</h3>
       <p>Брэнд имиж, бүтээгдэхүүний студи зургийг AI-гаар — ямар ч орчин, ямар ч гэрэлтүүлэг, дахин авалтгүй.</p>
       <ul><li>Бүтээгдэхүүний зураг</li><li>Брэнд имиж</li><li>Кампанит визуал</li></ul>
     </article>
     <article class="svc">
-      <span class="idx">ЭНЖИН.03</span>
+      <span class="idx">ҮЙЛЧИЛГЭЭ 03</span>
       <h3>AI Маркетинг</h3>
       <p>Позиционинг, контент, кампанит ажлыг AI үйлдвэрлэж, үр дүн бүрийг хэмжиж, өөрөө сайжруулна.</p>
-      <ul><li>Кампанит систем</li><li>Контент энжин</li><li>Өсөлтийн гогцоо</li></ul>
+      <ul><li>Кампанит систем</li><li>Контент үйлдвэрлэл</li><li>Өсөлтийн гогцоо</li></ul>
     </article>
     <article class="svc">
-      <span class="idx">ЭНЖИН.04</span>
+      <span class="idx">ҮЙЛЧИЛГЭЭ 04</span>
       <h3>3D Вэбсайт</h3>
-      <p>Яг энэ сайт шиг — scroll-кино, 3D мэдрэмжтэй вэбсайтыг захиалгаас хэдхэн хоногийн дотор амьд болгоно.</p>
-      <ul><li>Scroll-кино сайт</li><li>Нээлтийн сайт</li><li>Онлайн дэлгүүр</li></ul>
+      <p>Яг энэ сайт шиг — 3D animated, кино мэдрэмжтэй вэбсайтыг захиалгаас хэдхэн хоногийн дотор амьд болгоно.</p>
+      <ul><li>3D animated сайт</li><li>Нээлтийн сайт</li><li>Онлайн дэлгүүр</li></ul>
     </article>
   </div>
 </section>
@@ -495,7 +498,7 @@ noscript .beat{position:relative;opacity:1;}
         </g>
       </svg>
       <div class="shade"></div>
-      <div class="meta"><span class="cat">3D Вэбсайт</span><h3>Scroll-кино сайт — яг та одоо үзэж буй шиг</h3></div>
+      <div class="meta"><span class="cat">3D Вэбсайт</span><h3>3D animated website — яг та одоо үзэж буй шиг</h3></div>
     </article>
     <article class="work">
       <svg class="cover" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -567,17 +570,17 @@ noscript .beat{position:relative;opacity:1;}
 <!-- ============ MANIFESTO ============ -->
 <section class="manifesto" id="manifesto">
   <p class="line" id="manifestoLine">Бид өөрөө сэтгэдэг брэнд бүтээдэг.</p>
-  <p class="sub">Ихэнх агентлаг танд цагаа зардаг. <b>AISOLENNE танд энжин бүтээж өгдөг</b> — хамтын ажиллагаа дууссанаас хойш ч маркетинг хийж, бүтээж, суралцсаар байдаг системүүд. Оч бол эхлэл; одны орд бол таных.</p>
+  <p class="sub">Ихэнх агентлаг танд цагаа зардаг. <b>AISOLENNE танд систем бүтээж өгдөг</b> — хамтын ажиллагаа дууссанаас хойш ч маркетинг хийж, бүтээж, суралцсаар байдаг систем. Оч бол эхлэл; одны орд бол таных.</p>
 </section>
 
 <!-- ============ CTA ============ -->
 <section class="section cta" id="cta">
   <div class="marquee" id="marquee">
-    <span>ОЧОО <b>АСАА</b> — </span><span>ОЧОО <b>АСАА</b> — </span>
-    <span>ОЧОО <b>АСАА</b> — </span><span>ОЧОО <b>АСАА</b> — </span>
+    <span>ХАМТДАА <b>БҮТЭЭЕ</b> — </span><span>ХАМТДАА <b>БҮТЭЭЕ</b> — </span>
+    <span>ХАМТДАА <b>БҮТЭЭЕ</b> — </span><span>ХАМТДАА <b>БҮТЭЭЕ</b> — </span>
   </div>
   <div class="cta-inner">
-    <a class="cta-btn" href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener">Очоо асаа ↗</a>
+    <a class="cta-btn" href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener noreferrer">Хамтран ажиллах ↗</a>
     <p class="cta-note">Юу бүтээхээ Instagram-аар бичээрэй — 48 цагийн дотор төлөвлөгөө, дээр нь ажиллаж эхэлсэн демо-гоор хариулна. Эсвэл шууд залгаарай: <a href="tel:+97696369633">9636-9633</a></p>
   </div>
 </section>
@@ -601,11 +604,11 @@ noscript .beat{position:relative;opacity:1;}
         </g>
       </svg>
     </a>
-    <a class="ft-mail" href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener">@aisolenne.mn</a>
+    <a class="ft-mail" href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener noreferrer">@aisolenne.mn</a>
     <a class="ft-mail" href="tel:+97696369633">☎ 9636-9633</a>
   </div>
   <div class="ft-social">
-    <a href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+    <a href="https://www.instagram.com/aisolenne.mn/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
   </div>
   <div class="ft-small">
     <span>© 2026 AISOLENNE.MN — AI агентлаг</span>
