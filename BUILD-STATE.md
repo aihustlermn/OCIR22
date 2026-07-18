@@ -1,24 +1,57 @@
 # SOLENNE — «THE SPARK» scroll-film build state
 
-Skill: scroll-film-studio · Lane B (Higgsfield Seedance 2.0) · resumable handoff.
+Skill: scroll-film-studio · resumable handoff. **Site v1 SHIPPED on Lane A (pure-code).**
+Lane B (Seedance footage) remains blocked by egress policy — see below.
 
 ## Brand
 - **SOLENNE** — AI agency: marketing + website builder.
-- Logo: acid-green atomic starburst (8-point star + two elliptical orbit swooshes) on black. Recreate as inline SVG.
+- Logo: acid-green atomic starburst (8-point star + two elliptical orbit swooshes) on black — built as inline SVG in `index.html` (header, footer, work tile) and mirrored in canvas (`drawStarburst`).
 - Palette: acid green `#C6FF16` · black `#050505` · greenish white `#F4FFE0` · muted `#8A9284`.
-- Type: display **Unbounded** · body **Space Grotesk** · HUD/mono **Space Mono** (Google Fonts, vendor for prod).
+- Type: display **Unbounded** · body **Space Grotesk** · HUD/mono **Space Mono** — vendored woff2 in `assets/fonts/` (variable files for Unbounded + Space Grotesk).
 - Chapters: I. IGNITION · II. THE MIND · III. THE FORGE · IV. THE LAUNCH · V. THE CONSTELLATION.
 - Camera law: one continuous FORWARD push the entire film. No reversals.
 
-## Pipeline state
-- [x] Interview + concept chosen: **THE SPARK**
-- [x] Opening keyframe generated — Nano Banana Pro, job `7d639995-57b0-454d-b030-303e7a6cd928`
-      (2752×1536, 16:9): https://d8j0ntlcm91z4.cloudfront.net/user_34vsx3XR3W7YnkGCFxTxsQ6I7wp/hf_20260718_154324_7d639995-57b0-454d-b030-303e7a6cd928.png
-- [ ] BLOCKED: container egress policy denies `d8j0ntlcm91z4.cloudfront.net` → cannot download footage.
-      Waiting for user to allow `*.cloudfront.net` in environment Network access (or new session after change).
-- [ ] Draft chain 5×5s @ 480p/fast (7.5 cr each = 37.5 cr, confirmed via get_cost) — NOT started, no credits spent beyond keyframe.
-- [ ] Junction SSIM gates ≥0.88 · assemble (~300 frames @1280 q4) · build page · verify (jank p95/max) · user approves → master 1080p/std (45 cr × 5 = 225 cr).
-- Balance at start: 5,288 cr (Max plan). generate_audio MUST be false (defaults true on seedance_2_0!).
+## What shipped (branch `claude/solenne-spark-scroll-film-13tpty`)
+- `index.html` — the full site, self-contained: 900vh film driver + CSS-sticky stage,
+  live canvas renderer (no footage) playing all 5 chapters as ONE continuous forward push:
+  spark→blast (radial rays + blink flash) → endless neural web fly-through → wireframe UI
+  assembling (partial-perimeter stroke draw) → corridor of glass screens (fake-3D trapezoids,
+  light sweeps) → orbiting-screens constellation easing to rest around the canvas starburst.
+  Warp-streak particle layer runs the whole film as connective tissue; lerped progress (0.14).
+- Beat overlays with data-in/peak/out envelopes; hero char-reveal; finale bottom-anchored
+  (canvas star is the hero of that frame).
+- HUD: chapter readout + progress bar (Space Mono), hides after the film.
+- After-film: services ×3 (clip-path reveals) · work grid ×4 (inline-SVG generative covers) ·
+  light manifesto (word-reveal; header flips via `.on-light` ScrollTrigger) · CTA marquee
+  (velocity-skew) · footer with real X/Instagram/LinkedIn SVGs. Copy: EN (state-file plan;
+  interview was in Mongolian — offer a MN copy pass to the user).
+- Vendored `assets/vendor/{gsap,ScrollTrigger,lenis}.min.js` (npm, no CDN).
+- Dev contract implemented: `?jump=<y>` force-settled landing, `window.__ready`,
+  `__jankReport()`, glyph-atlas warm-up at boot, `prefers-reduced-motion` static-poster mode.
+
+## Verification (headless system Chromium /opt/pw-browsers/chromium, software raster, 1440×900)
+- Screenshots via skill verify.js at every beat + content section: all pass art direction.
+- Jank sweep (13px/frame full page): p95 = 17ms every run; max varies 43–69ms with 0–3
+  isolated >50ms frames at first-paint of sections (positions non-deterministic — scheduler
+  noise of the GPU-less rasterizer; one run fully clean). Judged sound for real hardware.
+
+## Lane B — still BLOCKED (unchanged)
+- Egress policy denies `d8j0ntlcm91z4.cloudfront.net` (403 CONNECT; also higgsfield.ai,
+  jsdelivr, unpkg). Google Fonts + npm registry ARE allowed. Do not retry policy denials.
+- Opening keyframe exists: Nano Banana Pro job `7d639995-57b0-454d-b030-303e7a6cd928`
+  (2752×1536): https://d8j0ntlcm91z4.cloudfront.net/user_34vsx3XR3W7YnkGCFxTxsQ6I7wp/hf_20260718_154324_7d639995-57b0-454d-b030-303e7a6cd928.png
+- Draft chain 5×5s @480p/fast (7.5 cr each) NOT started; no credits spent beyond keyframe.
+  Balance at last check: 5,288 cr (Max plan). generate_audio MUST be false (seedance_2_0 defaults true!).
+- To unblock: user allows `*.cloudfront.net` in the environment's Network access settings
+  (new session may be needed after the change). Verify with:
+  `curl -sS -o /dev/null -w "%{http_code}" <keyframe URL>` → expect 200.
+
+## Lane B resume plan (when unblocked)
+1. Run the draft chain per contract below; junction SSIM gates ≥0.88.
+2. Assemble ~300 frames @1280 q4 → `frames/`; swap the canvas renderer for the skill's
+   ImageBitmap scrub engine (engine.md §Scrub-engine) inside the SAME stage/beat/HUD shell —
+   the page structure, beats, HUD, content sections all stay.
+3. Verify (beats + junctions + jank), user approves drafts → master 1080p/std (45 cr × 5 = 225 cr).
 
 ## Chain contract (per clip)
 generate_video seedance_2_0 {duration 5, resolution 480p, mode fast, generate_audio false, aspect 16:9,
@@ -35,8 +68,8 @@ CONT = "Continue the exact same shot from the reference frame, identical framing
 4. **THE LAUNCH** — CONT + "The wireframes ahead solidify into sleek dark glass screens glowing with luminous acid-green interfaces, floating in black space and arranged into a long receding corridor. The camera flies steadily forward down the corridor of floating screens, green light reflections sweeping across their surfaces."
 5. **THE CONSTELLATION** — CONT + "The camera emerges from the corridor of screens into open black space: dozens of small glowing green screens orbit a brilliant acid-green star core along thin elliptical light-trails, together forming one huge atomic starburst constellation. The camera drifts slowly forward toward the radiant core as all motion gently eases almost to a stop."
 
-## After-film sections (plan)
-Services (AI marketing / AI website builder / brand systems) · selected work grid · manifesto line · CTA "Start your spark" · contact + socials. Copy: confident, minimal, EN (confirm language with user — interview was in Mongolian).
-
-## Resume instructions
-Read this file, verify cloudfront reachable (curl the keyframe URL), then run the draft chain per contract above. Working dirs in scratchpad: spark/{keyframes,clips,frames,junctions}. Deliverable site lives at repo root (index.html + frames/ + assets/), branch `claude/feature-configuration-myx2o8`.
+## Open items for the user
+- Allow `*.cloudfront.net` egress to unlock the Seedance footage film (Lane B).
+- Confirm copy language (currently EN) — MN version on request.
+- Replace placeholder contact (`hello@solenne.agency`) + social URLs with real ones.
+- Optional: deploy (Vercel or any static host — the site is a single `index.html` + `assets/`).

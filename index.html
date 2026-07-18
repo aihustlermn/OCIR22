@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLENNE — The AI Agency</title>
+<meta name="description" content="SOLENNE is an AI agency: marketing engines and websites, built by intelligence. One spark. An entire system.">
+<style>
+/* ============ FONTS ============ */
+@font-face{
+  font-family:'Unbounded';
+  src:url('assets/fonts/unbounded-var.woff2') format('woff2');
+  font-weight:200 900;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:'Space Grotesk';
+  src:url('assets/fonts/space-grotesk-var.woff2') format('woff2');
+  font-weight:300 700;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:'Space Mono';
+  src:url('assets/fonts/space-mono-400.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:'Space Mono';
+  src:url('assets/fonts/space-mono-700.woff2') format('woff2');
+  font-weight:700;font-style:normal;font-display:swap;
+}
+
+/* ============ TOKENS / RESET ============ */
+:root{
+  --acid:#C6FF16;
+  --black:#050505;
+  --paper:#F4FFE0;
+  --muted:#8A9284;
+  --display:'Unbounded',sans-serif;
+  --body:'Space Grotesk',sans-serif;
+  --mono:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scrollbar-width:thin;scrollbar-color:#2a3311 var(--black);}
+html,body{background:var(--black);color:var(--paper);}
+body{
+  font-family:var(--body);
+  font-size:17px;line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--acid);color:var(--black);}
+a{color:inherit;text-decoration:none;}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.08;}
+img,svg{max-width:100%;display:block;}
+
+/* ============ HEADER ============ */
+.hdr{
+  position:fixed;inset:0 0 auto 0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 1.6rem;
+  color:var(--paper);
+  transition:color .45s ease;
+  pointer-events:none;
+  mix-blend-mode:normal;
+}
+.hdr.on-light{color:var(--black);}
+.hdr a{pointer-events:auto;}
+.hdr-logo{display:flex;align-items:center;gap:.7rem;}
+.hdr-logo svg{width:30px;height:30px;}
+.hdr-logo .star,.hdr-logo .orbit{transition:none;}
+.hdr-wordmark{
+  font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:.34em;
+}
+.hdr-nav{display:flex;align-items:center;gap:1.6rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;}
+.hdr-nav a{opacity:.75;transition:opacity .25s;}
+.hdr-nav a:hover{opacity:1;color:var(--acid);}
+.hdr.on-light .hdr-nav a:hover{color:var(--black);}
+
+/* chapter HUD */
+.hud{
+  display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  min-width:172px;
+  transition:opacity .5s ease;
+}
+.hud-label{white-space:nowrap;}
+.hud-bar{width:172px;height:2px;background:rgba(198,255,22,.18);overflow:hidden;}
+.hud-bar i{display:block;height:100%;width:0%;background:var(--acid);}
+.hud.gone{opacity:0;}
+@media(max-width:760px){
+  .hdr-nav{display:none;}
+  .hud{min-width:110px;}
+  .hud-bar{width:110px;}
+}
+
+/* ============ THE FILM ============ */
+.film-driver{position:relative;height:900vh;}
+.stage{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  background:var(--black);
+}
+#film{position:absolute;inset:0;width:100%;height:100%;display:block;}
+
+/* grain + vignette */
+.grain{
+  position:absolute;inset:-40px;pointer-events:none;opacity:.07;z-index:3;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.vignette{
+  position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse at center,transparent 52%,rgba(0,0,0,.55) 100%);
+}
+.seam{
+  position:absolute;inset:auto 0 0 0;height:38vh;pointer-events:none;z-index:4;opacity:0;
+  background:linear-gradient(to bottom,transparent,var(--black) 82%);
+}
+
+/* beats */
+.beat{
+  position:absolute;inset:0;z-index:5;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;opacity:0;padding:0 6vw;
+}
+.beat .kicker{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--acid);margin-bottom:1.1rem;
+}
+.beat h2{font-size:clamp(1.7rem,4.6vw,3.6rem);font-weight:700;text-wrap:balance;}
+.beat p{margin-top:1rem;color:var(--muted);font-size:clamp(.95rem,1.4vw,1.12rem);max-width:34em;}
+
+.beat.hero .wordmark{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(2.6rem,10.5vw,8.6rem);
+  letter-spacing:.12em;text-indent:.12em;
+  color:var(--paper);
+  display:flex;overflow:hidden;
+}
+.beat.hero .wordmark span{display:inline-block;transform:translateY(120%);}
+.beat.hero .tag{
+  margin-top:1.4rem;color:var(--muted);
+  font-size:clamp(.9rem,1.5vw,1.15rem);letter-spacing:.04em;
+}
+.beat.hero .tag b{color:var(--acid);font-weight:500;}
+.scroll-cue{
+  position:absolute;bottom:4.5vh;left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:.6rem;
+}
+.scroll-cue::after{
+  content:'';width:1px;height:34px;
+  background:linear-gradient(var(--acid),transparent);
+  animation:cue 1.8s ease-in-out infinite;
+}
+@keyframes cue{0%,100%{transform:scaleY(.3);transform-origin:top;}50%{transform:scaleY(1);}}
+
+.beat.finale{justify-content:flex-end;padding-bottom:10vh;}
+.beat .cta-mini{
+  pointer-events:auto;margin-top:2rem;display:inline-block;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--black);background:var(--acid);padding:.95rem 2.1rem;border-radius:2rem;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.beat .cta-mini:hover{transform:translateY(-2px);box-shadow:0 0 34px rgba(198,255,22,.5);}
+
+/* ============ CONTENT ============ */
+.section{position:relative;padding:16vh 6vw;}
+.sec-kicker{
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--acid);margin-bottom:1.2rem;
+}
+.sec-title{font-size:clamp(1.9rem,4.4vw,3.6rem);max-width:16em;text-wrap:balance;}
+
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:4.5rem;}
+@media(max-width:900px){.svc-grid{grid-template-columns:1fr;}}
+.svc{
+  position:relative;border:1px solid rgba(198,255,22,.16);border-radius:14px;
+  padding:2.2rem 1.9rem 2.4rem;background:linear-gradient(180deg,rgba(198,255,22,.045),rgba(198,255,22,0) 55%);
+  clip-path:inset(0 0 100% 0);
+  transition:border-color .35s ease,transform .35s ease;
+}
+.svc:hover{border-color:rgba(198,255,22,.55);transform:translateY(-4px);}
+.svc .idx{font-family:var(--mono);font-size:.62rem;letter-spacing:.3em;color:var(--muted);}
+.svc h3{font-size:1.25rem;margin:1.1rem 0 .8rem;color:var(--paper);}
+.svc p{color:var(--muted);font-size:.95rem;}
+.svc ul{list-style:none;margin-top:1.3rem;display:flex;flex-direction:column;gap:.45rem;}
+.svc li{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--paper);
+  display:flex;align-items:center;gap:.6rem;opacity:.85;
+}
+.svc li::before{content:'';width:5px;height:5px;background:var(--acid);transform:rotate(45deg);flex:none;}
+
+/* work */
+.work-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:4.5rem;}
+@media(max-width:820px){.work-grid{grid-template-columns:1fr;}}
+.work{
+  position:relative;border-radius:14px;overflow:hidden;border:1px solid rgba(198,255,22,.14);
+  aspect-ratio:16/10;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:1.6rem;background:#0a0d05;
+  clip-path:inset(0 0 100% 0);
+}
+.work svg.cover{position:absolute;inset:0;width:100%;height:100%;transition:transform .8s cubic-bezier(.2,.7,.2,1);}
+.work:hover svg.cover{transform:scale(1.06);}
+.work .meta{position:relative;z-index:2;}
+.work .meta .cat{font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--acid);}
+.work .meta h3{font-size:1.15rem;margin-top:.5rem;}
+.work .shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,5,.85),transparent 55%);}
+
+/* manifesto (light) */
+.manifesto{background:var(--paper);color:var(--black);padding:20vh 6vw;}
+.manifesto .line{
+  font-family:var(--display);font-weight:700;
+  font-size:clamp(2rem,6vw,5rem);line-height:1.06;max-width:11em;text-wrap:balance;
+}
+.manifesto .line .w{display:inline-block;overflow:hidden;vertical-align:top;}
+.manifesto .line .w i{display:inline-block;font-style:normal;transform:translateY(115%);}
+.manifesto .sub{margin-top:2.6rem;max-width:34em;color:#3c4433;font-size:1.05rem;}
+.manifesto .sub b{color:var(--black);}
+
+/* CTA */
+.cta{padding:0;overflow:hidden;}
+.marquee{
+  white-space:nowrap;display:flex;width:max-content;
+  padding:5.5rem 0 4rem;will-change:transform;
+}
+.marquee span{
+  font-family:var(--display);font-weight:900;
+  font-size:clamp(3.2rem,9vw,8rem);letter-spacing:.02em;
+  color:transparent;-webkit-text-stroke:1.5px rgba(198,255,22,.75);
+  padding-right:3.2rem;
+}
+.marquee span b{color:var(--acid);-webkit-text-stroke:0;font-weight:900;}
+.cta-inner{display:flex;flex-direction:column;align-items:center;gap:2rem;padding:0 6vw 16vh;text-align:center;}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:1rem;
+  font-family:var(--mono);font-size:.8rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--black);background:var(--acid);padding:1.35rem 3rem;border-radius:3rem;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(198,255,22,.45);}
+.cta-note{color:var(--muted);font-size:.9rem;max-width:30em;}
+
+/* footer */
+footer{
+  border-top:1px solid rgba(198,255,22,.14);
+  padding:4rem 6vw 3rem;display:flex;flex-wrap:wrap;gap:2.5rem;justify-content:space-between;align-items:flex-end;
+}
+.ft-left{display:flex;flex-direction:column;gap:1.2rem;}
+.ft-left .hdr-logo svg{width:38px;height:38px;}
+.ft-mail{font-family:var(--mono);font-size:.9rem;letter-spacing:.08em;color:var(--paper);}
+.ft-mail:hover{color:var(--acid);}
+.ft-social{display:flex;gap:1.1rem;}
+.ft-social a{opacity:.7;transition:opacity .25s,transform .25s;}
+.ft-social a:hover{opacity:1;transform:translateY(-2px);}
+.ft-social svg{width:20px;height:20px;fill:var(--paper);}
+.ft-small{width:100%;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:1.5rem;}
+
+/* ============ REDUCED MOTION ============ */
+@media(prefers-reduced-motion:reduce){
+  .film-driver{height:auto;}
+  .stage{position:relative;height:auto;overflow:visible;}
+  #film{height:100vh;}
+  .vignette,.grain,.seam{display:none;}
+  .beat{position:relative;inset:auto;opacity:1;padding:9vh 6vw;height:auto;min-height:52vh;}
+  .beat.hero{min-height:100vh;}
+  .beat.hero .wordmark span{transform:none;}
+  .beat.finale{padding-bottom:14vh;}
+  .scroll-cue{display:none;}
+  .svc,.work{clip-path:none;}
+  .manifesto .line .w i{transform:none;}
+}
+noscript .beat{position:relative;opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="hdr" id="hdr">
+  <a class="hdr-logo" href="#top" aria-label="SOLENNE home">
+    <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+      <g class="star" fill="currentColor" style="color:var(--acid)">
+        <path d="M50 50 L46.4 43 L50 4 L53.6 43 Z"/>
+        <path d="M50 50 L46.4 57 L50 96 L53.6 57 Z"/>
+        <path d="M50 50 L43 46.4 L4 50 L43 53.6 Z"/>
+        <path d="M50 50 L57 46.4 L96 50 L57 53.6 Z"/>
+        <g transform="rotate(45 50 50)" opacity=".85">
+          <path d="M50 50 L47.2 45 L50 22 L52.8 45 Z"/>
+          <path d="M50 50 L47.2 55 L50 78 L52.8 55 Z"/>
+          <path d="M50 50 L45 47.2 L22 50 L45 52.8 Z"/>
+          <path d="M50 50 L55 47.2 L78 50 L55 52.8 Z"/>
+        </g>
+      </g>
+      <g class="orbit" stroke="var(--acid)" stroke-width="2" opacity=".8">
+        <ellipse cx="50" cy="50" rx="45" ry="16" transform="rotate(-28 50 50)"/>
+        <ellipse cx="50" cy="50" rx="45" ry="16" transform="rotate(28 50 50)"/>
+      </g>
+      <circle cx="86" cy="31" r="3.4" fill="var(--acid)"/>
+    </svg>
+    <span class="hdr-wordmark">SOLENNE</span>
+  </a>
+  <nav class="hdr-nav">
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="hud" id="hud" aria-hidden="true">
+    <span class="hud-label" id="hudLabel">CH.I — IGNITION</span>
+    <span class="hud-bar"><i id="hudBar"></i></span>
+  </div>
+</header>
+
+<!-- ============ THE FILM ============ -->
+<div class="film-driver" id="filmDriver">
+  <div class="stage" id="top">
+    <canvas id="film"></canvas>
+    <div class="vignette"></div>
+    <div class="grain" id="grain"></div>
+    <div class="seam" id="seam"></div>
+
+    <!-- beats -->
+    <div class="beat hero" data-in="-0.1" data-peak="0" data-out="0.05">
+      <div class="wordmark" aria-label="SOLENNE">
+        <span>S</span><span>O</span><span>L</span><span>E</span><span>N</span><span>N</span><span>E</span>
+      </div>
+      <p class="tag">The AI agency. <b>Marketing engines &amp; websites</b>, built by intelligence.</p>
+      <div class="scroll-cue">Scroll</div>
+    </div>
+
+    <div class="beat" data-in="0.06" data-peak="0.09" data-out="0.135">
+      <div class="kicker">01 / Ignition</div>
+      <h2>Every brand begins<br>as a spark.</h2>
+    </div>
+
+    <div class="beat" data-in="0.23" data-peak="0.285" data-out="0.36">
+      <div class="kicker">02 / The Mind</div>
+      <h2>An intelligence that<br>never sleeps.</h2>
+      <p>It reads your market, your audience, your competitors — and learns in hours what agencies learn in months.</p>
+    </div>
+
+    <div class="beat" data-in="0.475" data-peak="0.525" data-out="0.585">
+      <div class="kicker">03 / The Forge</div>
+      <h2>Strategy becomes structure.</h2>
+      <p>Campaigns, funnels, interfaces — assembled line by line, in front of you.</p>
+    </div>
+
+    <div class="beat" data-in="0.675" data-peak="0.725" data-out="0.79">
+      <div class="kicker">04 / The Launch</div>
+      <h2>Shipped. Live. Converting.</h2>
+      <p>Not a deck. Not a promise. Working product in days, not quarters.</p>
+    </div>
+
+    <div class="beat finale" data-in="0.875" data-peak="0.94" data-out="2">
+      <div class="kicker">05 / The Constellation</div>
+      <h2>One spark.<br>An entire system.</h2>
+      <a class="cta-mini" href="#contact">Start your spark</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SERVICES ============ -->
+<section class="section" id="services">
+  <div class="sec-kicker">What we build</div>
+  <h2 class="sec-title">Three engines. One system that compounds.</h2>
+  <div class="svc-grid">
+    <article class="svc">
+      <span class="idx">ENG.01</span>
+      <h3>AI Marketing</h3>
+      <p>Always-on growth engines: positioning, campaigns and content produced, tested and rewritten by models that watch every result.</p>
+      <ul><li>Campaign systems</li><li>Content engines</li><li>Growth loops</li></ul>
+    </article>
+    <article class="svc">
+      <span class="idx">ENG.02</span>
+      <h3>AI Website Builder</h3>
+      <p>From brief to a live, converting site in days. Designed, written and built by intelligence — art-directed by humans with taste.</p>
+      <ul><li>Launch sites</li><li>E-commerce</li><li>Scroll-film experiences</li></ul>
+    </article>
+    <article class="svc">
+      <span class="idx">ENG.03</span>
+      <h3>Brand Systems</h3>
+      <p>Identity, voice and design systems built to be executed by machines — so every asset your AI ships stays unmistakably yours.</p>
+      <ul><li>Identity &amp; logo</li><li>Voice &amp; messaging</li><li>Design systems</li></ul>
+    </article>
+  </div>
+</section>
+
+<!-- ============ WORK ============ -->
+<section class="section" id="work">
+  <div class="sec-kicker">Selected work</div>
+  <h2 class="sec-title">Sparks we've already lit.</h2>
+  <div class="work-grid">
+    <article class="work">
+      <svg class="cover" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="640" height="400" fill="#070a03"/>
+        <g stroke="#C6FF16" stroke-width="1" opacity=".5" fill="none">
+          <path d="M0 320 Q160 180 320 240 T640 120"/>
+          <path d="M0 360 Q160 260 320 300 T640 200" opacity=".4"/>
+        </g>
+        <g fill="#C6FF16"><circle cx="320" cy="240" r="5"/><circle cx="520" cy="156" r="4" opacity=".7"/><circle cx="150" cy="190" r="3" opacity=".5"/></g>
+      </svg>
+      <div class="shade"></div>
+      <div class="meta"><span class="cat">Growth engine</span><h3>D2C skincare — 6× ROAS in 90 days</h3></div>
+    </article>
+    <article class="work">
+      <svg class="cover" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="640" height="400" fill="#070a03"/>
+        <g stroke="#C6FF16" fill="none" opacity=".65">
+          <rect x="140" y="80" width="360" height="240" rx="10" stroke-width="1.5"/>
+          <line x1="140" y1="118" x2="500" y2="118" stroke-width="1"/>
+          <circle cx="162" cy="99" r="4"/><circle cx="178" cy="99" r="4"/>
+          <rect x="170" y="150" width="140" height="10" rx="5" fill="#C6FF16" opacity=".8"/>
+          <rect x="170" y="176" width="200" height="6" rx="3" fill="#C6FF16" opacity=".3"/>
+          <rect x="170" y="192" width="170" height="6" rx="3" fill="#C6FF16" opacity=".3"/>
+          <rect x="170" y="232" width="96" height="30" rx="15" fill="#C6FF16"/>
+        </g>
+      </svg>
+      <div class="shade"></div>
+      <div class="meta"><span class="cat">Website</span><h3>Fintech launch site — brief to live in 9 days</h3></div>
+    </article>
+    <article class="work">
+      <svg class="cover" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="640" height="400" fill="#070a03"/>
+        <g transform="translate(320 200) scale(2.9) translate(-50 -50)">
+          <g fill="#C6FF16">
+            <path d="M50 50 L46.4 43 L50 4 L53.6 43 Z"/><path d="M50 50 L46.4 57 L50 96 L53.6 57 Z"/>
+            <path d="M50 50 L43 46.4 L4 50 L43 53.6 Z"/><path d="M50 50 L57 46.4 L96 50 L57 53.6 Z"/>
+            <g transform="rotate(45 50 50)" opacity=".85">
+              <path d="M50 50 L47.2 45 L50 22 L52.8 45 Z"/><path d="M50 50 L47.2 55 L50 78 L52.8 55 Z"/>
+              <path d="M50 50 L45 47.2 L22 50 L45 52.8 Z"/><path d="M50 50 L55 47.2 L78 50 L55 52.8 Z"/>
+            </g>
+          </g>
+          <g stroke="#C6FF16" stroke-width="1.2" fill="none" opacity=".7">
+            <ellipse cx="50" cy="50" rx="45" ry="16" transform="rotate(-28 50 50)"/>
+            <ellipse cx="50" cy="50" rx="45" ry="16" transform="rotate(28 50 50)"/>
+          </g>
+        </g>
+      </svg>
+      <div class="shade"></div>
+      <div class="meta"><span class="cat">Brand system</span><h3>AI-native identity for a robotics startup</h3></div>
+    </article>
+    <article class="work">
+      <svg class="cover" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="640" height="400" fill="#070a03"/>
+        <g stroke="#C6FF16" opacity=".55" fill="none" stroke-width="1">
+          <line x1="60" y1="330" x2="60" y2="250"/><line x1="140" y1="330" x2="140" y2="210"/>
+          <line x1="220" y1="330" x2="220" y2="230"/><line x1="300" y1="330" x2="300" y2="160"/>
+          <line x1="380" y1="330" x2="380" y2="120"/><line x1="460" y1="330" x2="460" y2="140"/>
+          <line x1="540" y1="330" x2="540" y2="70"/>
+        </g>
+        <path d="M60 250 L140 210 L220 230 L300 160 L380 120 L460 140 L540 70" stroke="#C6FF16" stroke-width="2" fill="none"/>
+        <circle cx="540" cy="70" r="5" fill="#C6FF16"/>
+      </svg>
+      <div class="shade"></div>
+      <div class="meta"><span class="cat">Content engine</span><h3>B2B SaaS — 40 posts/week, one human editor</h3></div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto" id="manifesto">
+  <p class="line" id="manifestoLine">We build brands that think for themselves.</p>
+  <p class="sub">Most agencies sell you hours. <b>SOLENNE sells you engines</b> — systems that keep marketing, building and learning long after the handshake. The spark is the start; the constellation is yours.</p>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="section cta" id="cta">
+  <div class="marquee" id="marquee">
+    <span>START YOUR <b>SPARK</b> — </span><span>START YOUR <b>SPARK</b> — </span>
+    <span>START YOUR <b>SPARK</b> — </span><span>START YOUR <b>SPARK</b> — </span>
+  </div>
+  <div class="cta-inner">
+    <a class="cta-btn" href="mailto:hello@solenne.agency">Start your spark ↗</a>
+    <p class="cta-note">Tell us what you're building. We'll answer with a plan — and a working demo — within 48 hours.</p>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="contact">
+  <div class="ft-left">
+    <a class="hdr-logo" href="#top" aria-label="SOLENNE">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <g fill="var(--acid)">
+          <path d="M50 50 L46.4 43 L50 4 L53.6 43 Z"/><path d="M50 50 L46.4 57 L50 96 L53.6 57 Z"/>
+          <path d="M50 50 L43 46.4 L4 50 L43 53.6 Z"/><path d="M50 50 L57 46.4 L96 50 L57 53.6 Z"/>
+          <g transform="rotate(45 50 50)" opacity=".85">
+            <path d="M50 50 L47.2 45 L50 22 L52.8 45 Z"/><path d="M50 50 L47.2 55 L50 78 L52.8 55 Z"/>
+            <path d="M50 50 L45 47.2 L22 50 L45 52.8 Z"/><path d="M50 50 L55 47.2 L78 50 L55 52.8 Z"/>
+          </g>
+        </g>
+        <g stroke="var(--acid)" stroke-width="2" opacity=".8">
+          <ellipse cx="50" cy="50" rx="45" ry="16" transform="rotate(-28 50 50)"/>
+          <ellipse cx="50" cy="50" rx="45" ry="16" transform="rotate(28 50 50)"/>
+        </g>
+      </svg>
+    </a>
+    <a class="ft-mail" href="mailto:hello@solenne.agency">hello@solenne.agency</a>
+  </div>
+  <div class="ft-social">
+    <a href="https://x.com/" aria-label="X (Twitter)"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://instagram.com/" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+    <a href="https://linkedin.com/" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+  </div>
+  <div class="ft-small">
+    <span>© 2026 SOLENNE — The AI Agency</span>
+    <span>Built by intelligence. Directed by taste.</span>
+  </div>
+</footer>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script>
+/* ================================================================
+   SOLENNE — «THE SPARK» pure-code scroll-film
+   One continuous forward camera push across five chapters,
+   rendered live on canvas, scrubbed by scroll.
+================================================================ */
+(function(){
+'use strict';
+
+var REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+var JUMP = new URLSearchParams(location.search).get('jump');
+if (JUMP !== null) history.scrollRestoration = 'manual';
+
+/* ---------- deterministic rng ---------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+var rng = mulberry32(20260718);
+
+/* ---------- helpers ---------- */
+function clamp(v,a,b){return v<a?a:v>b?b:v;}
+function lerp(a,b,t){return a+(b-a)*t;}
+function smooth(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+/* trapezoid envelope: 0→1 over [a,b], hold, 1→0 over [c,d] */
+function env(p,a,b,c,d){
+  if(p<=a||p>=d)return 0;
+  if(p<b)return smooth((p-a)/(b-a));
+  if(p>c)return 1-smooth((p-c)/(d-c));
+  return 1;
+}
+
+/* ---------- canvas ---------- */
+var canvas = document.getElementById('film');
+var ctx = canvas.getContext('2d');
+var W=0,H=0,CX=0,CY=0,DPR=1,MINDIM=0;
+function resize(){
+  DPR = Math.min(devicePixelRatio||1, 1.5);
+  W = innerWidth; H = innerHeight;
+  canvas.width = Math.round(W*DPR); canvas.height = Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  CX=W/2; CY=H/2; MINDIM=Math.min(W,H);
+}
+resize();
+addEventListener('resize', resize);
+
+var ACID='#C6FF16';
+function acid(a){return 'rgba(198,255,22,'+a+')';}
+function paper(a){return 'rgba(244,255,224,'+a+')';}
+
+/* ================================================================
+   WORLD DATA (deterministic)
+================================================================ */
+
+/* warp particles — connective tissue across the whole film */
+var WARP_N = 200, warp = [];
+for(var i=0;i<WARP_N;i++){
+  var ang = rng()*Math.PI*2;
+  warp.push({ ang:ang, rad:0.12+rng()*1.1, z:rng(), tw:rng()*Math.PI*2 });
+}
+
+/* chapter II — neural web nodes on an endless cylinder */
+var NODE_N = 230, nodes = [];
+for(var i=0;i<NODE_N;i++){
+  nodes.push({ ang:rng()*Math.PI*2, rad:0.28+rng()*1.15, zs:rng(), ph:rng()*Math.PI*2 });
+}
+nodes.sort(function(a,b){return a.zs-b.zs;});
+var edges = [];
+for(var i=0;i<NODE_N;i++){
+  edges.push([i,(i+1)%NODE_N]);
+  if(i%2===0) edges.push([i,(i+4)%NODE_N]);
+  if(i%5===0) edges.push([i,(i+9)%NODE_N]);
+}
+
+/* chapter III — wireframe UI blocks to assemble */
+var forms = [];
+(function(){
+  var defs = [
+    {w:.62,h:.42,type:'win'},{w:.34,h:.24,type:'card'},{w:.44,h:.3,type:'win'},
+    {w:.26,h:.09,type:'btn'},{w:.5,h:.36,type:'win'},{w:.3,h:.22,type:'card'},
+    {w:.24,h:.08,type:'btn'},{w:.56,h:.4,type:'win'},{w:.36,h:.26,type:'card'},
+    {w:.46,h:.32,type:'win'},{w:.28,h:.2,type:'card'},{w:.6,h:.44,type:'win'},
+    {w:.32,h:.22,type:'card'},{w:.22,h:.07,type:'btn'},{w:.4,h:.28,type:'win'},
+    {w:.26,h:.18,type:'card'},{w:.48,h:.34,type:'win'},{w:.2,h:.07,type:'btn'}
+  ];
+  for(var i=0;i<defs.length;i++){
+    var d = defs[i];
+    forms.push({
+      x:(rng()*2-1)*1.15, y:(rng()*2-1)*0.72, zs:i/defs.length,
+      w:d.w, h:d.h, type:d.type, seed:rng()
+    });
+  }
+})();
+
+/* chapter IV — corridor screens */
+var screens = [];
+for(var i=0;i<14;i++){
+  screens.push({ side:(i%2?1:-1), zs:i/14, lift:(rng()*2-1)*0.18, seed:rng() });
+}
+
+/* chapter V — constellation orbiters */
+var orbiters = [];
+for(var i=0;i<3;i++){
+  for(var j=0;j<8;j++){
+    orbiters.push({ orbit:i, t0:j/8 + i*0.045, seed:rng() });
+  }
+}
+
+/* ================================================================
+   PROJECTION — one shared forward camera
+================================================================ */
+/* depth d ∈ (0,1]: 1 = far, →0 = at camera. */
+function projScale(d){ return 0.22/(0.04 + d*0.9); }
+
+/* ================================================================
+   CHAPTER RENDERERS
+================================================================ */
+
+/* ---- base warp field (whole film) ---- */
+function drawWarp(p,t){
+  /* speed peaks at the ignition blast, cruises, eases to rest at the end */
+  var speed = 0.05 + env(p,0.05,0.09,0.11,0.3)*0.9 + env(p,0.2,0.3,0.75,0.95)*0.12;
+  var ease = 1 - smooth((p-0.86)/0.14);      /* ease to stop in ch.V */
+  if(p>0.86) speed *= Math.max(0.04, ease);
+  var alpha = 0.16 + env(p,0.05,0.08,0.12,0.28)*0.5;
+  for(var i=0;i<WARP_N;i++){
+    var w = warp[i];
+    w.z -= speed*0.008;
+    if(w.z<=0.02){ w.z = 1; w.ang = rng()*Math.PI*2; w.rad = 0.12+rng()*1.1; }
+    var s1 = projScale(w.z), s0 = projScale(Math.min(1,w.z + speed*0.045));
+    var r = w.rad*MINDIM;
+    var x1 = CX + Math.cos(w.ang)*r*s1, y1 = CY + Math.sin(w.ang)*r*s1;
+    var x0 = CX + Math.cos(w.ang)*r*s0, y0 = CY + Math.sin(w.ang)*r*s0;
+    var a = alpha*(1-w.z)*(0.4+0.6*Math.abs(Math.sin(t*2+w.tw)));
+    ctx.strokeStyle = acid(clamp(a,0,0.85));
+    ctx.lineWidth = clamp(1.6*s1,0.4,2.4);
+    ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+  }
+}
+
+/* ---- I · IGNITION ---- */
+function drawIgnition(p,t,alpha){
+  if(alpha<=0)return;
+  ctx.globalAlpha = alpha;
+  var local = clamp(p/0.16,0,1);
+  var tremble = clamp((local-0.12)/0.3,0,1);
+  var blast = smooth(clamp((local-0.42)/0.5,0,1));   /* the explosion */
+
+  var jx = Math.sin(t*31)*2.4*tremble*(1-blast), jy = Math.cos(t*24)*2.2*tremble*(1-blast);
+  var cx = CX+jx, cy = CY+jy;
+
+  /* core glow */
+  var coreR = (3 + tremble*7)* (1-blast) + blast*MINDIM*0.34;
+  var g = ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(coreR,4));
+  g.addColorStop(0, blast>0.55 ? paper(0.95) : acid(0.95));
+  g.addColorStop(0.35, acid(0.55*(1-blast*0.4)));
+  g.addColorStop(1, acid(0));
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(cx,cy,Math.max(coreR,4),0,7); ctx.fill();
+
+  /* starburst rays */
+  if(blast>0.01){
+    var rays = 24;
+    for(var i=0;i<rays;i++){
+      var a = (i/rays)*Math.PI*2 + (i%2)*0.06;
+      var major = i%3===0;
+      var len = blast*MINDIM*(major?1.15:0.6)*(0.8+0.2*Math.sin(i*7.3));
+      var w0 = (major?4:2)*(1-blast*0.5);
+      ctx.strokeStyle = acid(clamp((major?0.9:0.55)*(1-blast*0.35),0,1));
+      ctx.lineWidth = Math.max(w0,0.6);
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(a)*coreR*0.4, cy+Math.sin(a)*coreR*0.4);
+      ctx.lineTo(cx+Math.cos(a)*(coreR*0.4+len), cy+Math.sin(a)*(coreR*0.4+len));
+      ctx.stroke();
+    }
+  }
+
+  /* detonation — a fast blink, not a wash */
+  var flash = env(p,0.062,0.069,0.074,0.092);
+  if(flash>0){
+    ctx.fillStyle = 'rgba(216,255,150,'+(flash*0.5)+')';
+    ctx.fillRect(0,0,W,H);
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ---- II · THE MIND ---- */
+function drawMind(p,t,alpha){
+  if(alpha<=0)return;
+  ctx.globalAlpha = alpha;
+  var local = clamp((p-0.16)/0.28,0,1);
+  var travel = local*2.1;
+
+  var pts = [];
+  for(var i=0;i<NODE_N;i++){
+    var n = nodes[i];
+    var d = ((n.zs - travel)%1+1)%1;         /* endless wrap */
+    var s = projScale(0.05+d*0.95);
+    var r = n.rad*MINDIM;
+    pts.push({ x:CX+Math.cos(n.ang)*r*s, y:CY+Math.sin(n.ang)*r*s, d:d, s:s, ph:n.ph });
+  }
+  /* filaments */
+  ctx.lineWidth = 1;
+  for(var i=0;i<edges.length;i++){
+    var A = pts[edges[i][0]], B = pts[edges[i][1]];
+    if(A.d>0.92&&B.d>0.92) continue;
+    var near = 1-Math.min(A.d,B.d);
+    ctx.strokeStyle = acid(clamp(0.05+near*0.3,0,0.4));
+    ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke();
+    /* signal pulse */
+    if(i%3===0){
+      var k = ((t*0.35 + A.ph)%1+1)%1;
+      var px = lerp(A.x,B.x,k), py = lerp(A.y,B.y,k);
+      ctx.fillStyle = acid(clamp(near*0.9,0,0.95));
+      ctx.beginPath(); ctx.arc(px,py,1.4+near*1.6,0,7); ctx.fill();
+    }
+  }
+  /* nodes */
+  for(var i=0;i<NODE_N;i++){
+    var P = pts[i];
+    var near = 1-P.d;
+    var rr = clamp(1.2+near*3.4,0.6,5);
+    var pulse = 0.55+0.45*Math.sin(t*2.4+P.ph);
+    ctx.fillStyle = acid(clamp(0.25+near*0.7*pulse,0,1));
+    ctx.beginPath(); ctx.arc(P.x,P.y,rr,0,7); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ---- III · THE FORGE — wireframes assembling ---- */
+function drawStrokedFraction(x,y,w,h,frac){
+  /* draw rect perimeter partially: frac ∈ [0,1] */
+  if(frac<=0)return;
+  var per = 2*(w+h), remain = per*frac;
+  var segs = [[x,y,x+w,y],[x+w,y,x+w,y+h],[x+w,y+h,x,y+h],[x,y+h,x,y]];
+  ctx.beginPath();
+  for(var i=0;i<segs.length&&remain>0;i++){
+    var sx=segs[i][0],sy=segs[i][1],ex=segs[i][2],ey=segs[i][3];
+    var len = Math.abs(ex-sx)+Math.abs(ey-sy);
+    var k = Math.min(1,remain/len);
+    ctx.moveTo(sx,sy);
+    ctx.lineTo(sx+(ex-sx)*k, sy+(ey-sy)*k);
+    remain -= len;
+  }
+  ctx.stroke();
+}
+function drawForge(p,t,alpha){
+  if(alpha<=0)return;
+  ctx.globalAlpha = alpha;
+  var local = clamp((p-0.42)/0.22,0,1);
+  var travel = local*1.15;
+  for(var i=0;i<forms.length;i++){
+    var f = forms[i];
+    var d = f.zs - travel + 0.95;             /* blocks approach & pass */
+    if(d<=0.02||d>1.1) continue;
+    var s = projScale(clamp(d,0.03,1));
+    var w = f.w*MINDIM*s*2.6, h = f.h*MINDIM*s*2.6;
+    var x = CX + f.x*MINDIM*s - w/2, y = CY + f.y*MINDIM*s - h/2;
+    var build = smooth(clamp((1-d)*2.4 - f.seed*0.5, 0, 1));  /* assembles ahead of camera */
+    var a = clamp((1-d)*1.4,0,1)*0.85;
+    ctx.strokeStyle = acid(a);
+    ctx.lineWidth = clamp(1.6*s*3,0.6,2.2);
+    drawStrokedFraction(x,y,w,h,build);
+    if(build>0.99 && f.type!=='btn'){
+      /* inner details pop in */
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = acid(a*0.55);
+      if(f.type==='win'){
+        ctx.beginPath(); ctx.moveTo(x,y+h*0.16); ctx.lineTo(x+w,y+h*0.16); ctx.stroke();
+        ctx.fillStyle = acid(a*0.8);
+        ctx.beginPath(); ctx.arc(x+w*0.05,y+h*0.08,Math.max(1.5*s*3,1),0,7); ctx.fill();
+        ctx.beginPath(); ctx.arc(x+w*0.1,y+h*0.08,Math.max(1.5*s*3,1),0,7); ctx.fill();
+      }
+      var lines = f.type==='win'?3:2;
+      for(var L=0;L<lines;L++){
+        var ly = y+h*(0.3+L*0.16);
+        ctx.strokeStyle = acid(a*0.35);
+        ctx.beginPath(); ctx.moveTo(x+w*0.08,ly); ctx.lineTo(x+w*(0.5+f.seed*0.35),ly); ctx.stroke();
+      }
+    }
+    if(build>0.99 && f.type==='btn'){
+      ctx.fillStyle = acid(a*0.85);
+      ctx.fillRect(x,y,w,h);
+    }
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ---- IV · THE LAUNCH — corridor of glass screens ---- */
+function drawScreenQuad(sd,t,seed,side,lift){
+  /* trapezoid screen: near edge & far edge projected separately */
+  var dNear = clamp(sd,0.03,1), dFar = clamp(sd+0.1,0.03,1.05);
+  var sN = projScale(dNear), sF = projScale(dFar);
+  var xw = 0.92*side*MINDIM, yTop=(-0.42+lift)*MINDIM, yBot=(0.42+lift)*MINDIM;
+  var nx = CX+xw*sN, fx = CX+xw*sF;
+  var nty = CY+yTop*sN, nby = CY+yBot*sN;
+  var fty = CY+yTop*sF, fby = CY+yBot*sF;
+  var near = clamp(1-sd,0,1);
+  /* glass */
+  ctx.fillStyle = 'rgba(10,14,6,'+(0.55+near*0.3)+')';
+  ctx.beginPath();
+  ctx.moveTo(nx,nty); ctx.lineTo(fx,fty); ctx.lineTo(fx,fby); ctx.lineTo(nx,nby);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = acid(clamp(0.15+near*0.75,0,0.9));
+  ctx.lineWidth = clamp(2.4*sN,0.6,2.6);
+  ctx.stroke();
+  /* inner UI lines */
+  ctx.lineWidth = 1;
+  for(var L=0;L<4;L++){
+    var k=0.2+L*0.18;
+    var ny = nty+(nby-nty)*k, fy = fty+(fby-fty)*k;
+    ctx.strokeStyle = acid(clamp(near*0.4*(0.5+0.5*Math.sin(seed*9+L)),0,0.5));
+    ctx.beginPath(); ctx.moveTo(nx,ny); ctx.lineTo(nx+(fx-nx)*(0.35+((seed*13+L*7)%1)*0.55), ny+(fy-ny)*(0.35+((seed*13+L*7)%1)*0.55)); ctx.stroke();
+  }
+  /* light sweep */
+  var sweep = ((t*0.22+seed)%1);
+  var sy0 = nty+(nby-nty)*sweep;
+  ctx.strokeStyle = paper(clamp(near*0.35*Math.sin(sweep*Math.PI),0,0.4));
+  ctx.lineWidth = clamp(6*sN,1,7);
+  ctx.beginPath(); ctx.moveTo(nx,sy0); ctx.lineTo(fx,fty+(fby-fty)*sweep); ctx.stroke();
+}
+function drawLaunch(p,t,alpha){
+  if(alpha<=0)return;
+  ctx.globalAlpha = alpha;
+  var local = clamp((p-0.62)/0.22,0,1);
+  var travel = local*1.35;
+  /* vanishing point glow */
+  var g = ctx.createRadialGradient(CX,CY,0,CX,CY,MINDIM*0.28);
+  g.addColorStop(0,acid(0.16)); g.addColorStop(1,acid(0));
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  /* far → near so near screens draw on top */
+  var order = screens.slice().sort(function(a,b){
+    var da=((a.zs - travel)%1+1)%1, db=((b.zs - travel)%1+1)%1;
+    return db-da;
+  });
+  for(var i=0;i<order.length;i++){
+    var s = order[i];
+    var d = ((s.zs - travel)%1+1)%1;
+    if(d>0.96) continue;
+    drawScreenQuad(0.06+d*0.94, t, s.seed, s.side, s.lift);
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ---- V · THE CONSTELLATION ---- */
+function drawStarburst(cx,cy,R,a,strokeW){
+  /* 8-point star, logo geometry */
+  for(var i=0;i<8;i++){
+    var ang = i*Math.PI/4;
+    var len = (i%2===0)?R:R*0.62;
+    var half = R*0.055;
+    ctx.fillStyle = acid(a*(i%2===0?1:0.85));
+    ctx.beginPath();
+    ctx.moveTo(cx+Math.cos(ang-Math.PI/2)*0, cy+Math.sin(ang-Math.PI/2)*0);
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+Math.cos(ang)*len*0.12+Math.cos(ang+Math.PI/2)*half, cy+Math.sin(ang)*len*0.12+Math.sin(ang+Math.PI/2)*half);
+    ctx.lineTo(cx+Math.cos(ang)*len, cy+Math.sin(ang)*len);
+    ctx.lineTo(cx+Math.cos(ang)*len*0.12-Math.cos(ang+Math.PI/2)*half, cy+Math.sin(ang)*len*0.12-Math.sin(ang+Math.PI/2)*half);
+    ctx.closePath(); ctx.fill();
+  }
+}
+function drawConstellation(p,t,alpha){
+  if(alpha<=0)return;
+  ctx.globalAlpha = alpha;
+  var local = clamp((p-0.82)/0.18,0,1);
+  var settle = smooth(local);                       /* motion eases to rest */
+  var spin = t*0.25*(1-settle*0.92);
+  var R = MINDIM*(0.1+settle*0.16);
+
+  /* core glow */
+  var g = ctx.createRadialGradient(CX,CY,0,CX,CY,R*2.4);
+  g.addColorStop(0,acid(0.55)); g.addColorStop(0.4,acid(0.18)); g.addColorStop(1,acid(0));
+  ctx.fillStyle=g;
+  ctx.beginPath(); ctx.arc(CX,CY,R*2.4,0,7); ctx.fill();
+
+  /* orbit trails + orbiting screens */
+  var tilts = [-0.49, 0.49, 0];
+  for(var o=0;o<3;o++){
+    var rx = R*(2.1+o*0.5), ry = rx*0.34;
+    ctx.strokeStyle = acid(0.3);
+    ctx.lineWidth = 1.2;
+    ctx.save();
+    ctx.translate(CX,CY); ctx.rotate(tilts[o]);
+    ctx.beginPath(); ctx.ellipse(0,0,rx,ry,0,0,7); ctx.stroke();
+    ctx.restore();
+  }
+  for(var i=0;i<orbiters.length;i++){
+    var ob = orbiters[i];
+    var rx = R*(2.1+ob.orbit*0.5), ry = rx*0.34;
+    var a = (ob.t0 + spin*(1+ob.orbit*0.2))*Math.PI*2;
+    var ex = Math.cos(a)*rx, ey = Math.sin(a)*ry;
+    var tilt = tilts[ob.orbit];
+    var x = CX + ex*Math.cos(tilt)-ey*Math.sin(tilt);
+    var y = CY + ex*Math.sin(tilt)+ey*Math.cos(tilt);
+    var sw = 7+ob.seed*8, sh = sw*0.68;
+    ctx.fillStyle = 'rgba(10,14,6,0.9)';
+    ctx.fillRect(x-sw/2,y-sh/2,sw,sh);
+    ctx.strokeStyle = acid(0.85); ctx.lineWidth=1;
+    ctx.strokeRect(x-sw/2,y-sh/2,sw,sh);
+    ctx.fillStyle = acid(0.6);
+    ctx.fillRect(x-sw/2+2,y-2,sw*0.5,1.4);
+  }
+  /* the star core */
+  drawStarburst(CX,CY,R,0.95,1);
+  ctx.globalAlpha = 1;
+}
+
+/* ================================================================
+   MASTER RENDER
+================================================================ */
+function render(p,t){
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0,0,W,H);
+  drawWarp(p,t);
+  drawIgnition(p,t, env(p,-1,-0.5,0.13,0.2));
+  drawMind(p,t,     env(p,0.15,0.21,0.4,0.47));
+  drawForge(p,t,    env(p,0.4,0.47,0.6,0.665));
+  drawLaunch(p,t,   env(p,0.6,0.665,0.8,0.87));
+  drawConstellation(p,t, env(p,0.8,0.875,2,3));
+}
+
+/* ================================================================
+   SCROLL / TICK
+================================================================ */
+var driver = document.getElementById('filmDriver');
+var beats = [].slice.call(document.querySelectorAll('.beat')).map(function(el){
+  return { el:el,
+    a:+el.dataset.in, pk:+el.dataset.peak, b:+el.dataset.out,
+    heroSpans: el.classList.contains('hero') ? el.querySelectorAll('.wordmark span') : null };
+});
+function beatAlpha(b,p){
+  if(p<b.a||p>b.b)return 0;
+  if(p<b.pk)return (p-b.a)/Math.max(1e-4,b.pk-b.a);
+  if(b.b>1.5)return 1;
+  return 1-(p-b.pk)/Math.max(1e-4,b.b-b.pk);
+}
+var hud = document.getElementById('hud'),
+    hudLabel = document.getElementById('hudLabel'),
+    hudBar = document.getElementById('hudBar'),
+    seam = document.getElementById('seam'),
+    grain = document.getElementById('grain');
+var CHAPTERS = [
+  [0,'CH.I — IGNITION'],[0.18,'CH.II — THE MIND'],[0.44,'CH.III — THE FORGE'],
+  [0.645,'CH.IV — THE LAUNCH'],[0.83,'CH.V — CONSTELLATION']
+];
+var lastLabel='';
+
+var progress=0, shownP=-1, timeSec=0;
+
+/* jank meter */
+var jd=[], lastTs=0;
+window.__jankReport = function(){
+  var a = jd.slice().sort(function(x,y){return x-y;});
+  return { count:a.length,
+    p95: a.length? a[Math.floor(a.length*0.95)] : 0,
+    max: a.length? a[a.length-1] : 0 };
+};
+
+function tick(ts){
+  if(lastTs){ var dt=ts-lastTs; if(dt<2000) jd.push(dt); if(jd.length>1800) jd.shift(); }
+  lastTs=ts;
+  timeSec = ts/1000;
+
+  var r = driver.getBoundingClientRect();
+  var target = clamp(-r.top/(r.height-innerHeight),0,1);
+  progress += (target-progress)*0.14;
+  if(Math.abs(target-progress)<0.0004) progress=target;
+
+  var p = progress;
+  /* time-based ambient motion → render every tick while the stage is visible */
+  if(r.bottom>0) render(p,timeSec);
+
+  /* beats */
+  for(var i=0;i<beats.length;i++){
+    var b=beats[i], a=beatAlpha(b,p);
+    b.el.style.opacity=a;
+    if(!b.heroSpans) b.el.style.transform='translateY('+((1-a)*(p>b.pk?-26:26))+'px)';
+  }
+
+  /* HUD */
+  var label = CHAPTERS[0][1];
+  for(var i=0;i<CHAPTERS.length;i++) if(p>=CHAPTERS[i][0]) label=CHAPTERS[i][1];
+  if(label!==lastLabel){ hudLabel.textContent=label; lastLabel=label; }
+  hudBar.style.width=(p*100).toFixed(2)+'%';
+  hud.classList.toggle('gone', r.bottom<=innerHeight*0.5);
+
+  /* seam handoff — last 8% */
+  var sa = clamp((p-0.92)/0.08,0,1);
+  seam.style.opacity=sa;
+  grain.style.opacity=0.07*(1-sa*0.8);
+
+  requestAnimationFrame(tick);
+}
+
+/* ================================================================
+   GSAP CONTENT + LENIS
+================================================================ */
+gsap.registerPlugin(ScrollTrigger);
+var lenis=null;
+if(!REDUCED && JUMP===null){
+  lenis = new Lenis({ lerp:0.09, smoothWheel:true });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(function(t){ lenis.raf(t*1000); });
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* hero wordmark reveal (time-based, on load) */
+function heroReveal(){
+  if(REDUCED){ return; }
+  gsap.to('.beat.hero .wordmark span',{
+    y:0, duration:1.1, ease:'power4.out', stagger:0.055, delay:0.15,
+    onUpdate:null
+  });
+  gsap.set('.beat.hero .wordmark span',{yPercent:0});
+}
+
+/* content section triggers — created AFTER the film (ordering law):
+   the film pin is CSS sticky (no spacer), but keep the discipline anyway */
+function contentTriggers(){
+  if(REDUCED){
+    gsap.set('.svc,.work',{clipPath:'inset(0% 0% 0% 0%)'});
+    gsap.set('.manifesto .line i',{y:0});
+    return;
+  }
+  gsap.utils.toArray('.svc').forEach(function(el,i){
+    gsap.to(el,{ clipPath:'inset(0% 0% 0% 0%)', duration:0.9, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 82%', once:true }, delay:i*0.08 });
+  });
+  gsap.utils.toArray('.work').forEach(function(el,i){
+    gsap.to(el,{ clipPath:'inset(0% 0% 0% 0%)', duration:0.9, ease:'power3.out',
+      scrollTrigger:{ trigger:el, start:'top 84%', once:true }, delay:(i%2)*0.09 });
+  });
+  /* manifesto word reveal */
+  var line = document.getElementById('manifestoLine');
+  var words = line.textContent.split(' ');
+  line.innerHTML = words.map(function(w){return '<span class="w"><i>'+w+'</i></span>';}).join(' ');
+  gsap.to('#manifestoLine .w i',{
+    y:0, duration:0.85, ease:'power4.out', stagger:0.05,
+    scrollTrigger:{ trigger:line, start:'top 78%', once:true }
+  });
+  /* header flips dark over the light manifesto */
+  ScrollTrigger.create({
+    trigger:'#manifesto', start:'top 3.2rem', end:'bottom 3.2rem',
+    onToggle:function(st){ document.getElementById('hdr').classList.toggle('on-light', st.isActive); }
+  });
+  /* marquee drift + velocity skew */
+  var mq = document.getElementById('marquee');
+  gsap.to(mq,{ xPercent:-50, ease:'none', duration:26, repeat:-1 });
+  var skewSetter = gsap.quickSetter(mq,'skewX','deg');
+  var skewProxy = 0;
+  ScrollTrigger.create({
+    trigger:'#cta', start:'top bottom', end:'bottom top',
+    onUpdate:function(st){
+      var v = clamp(st.getVelocity()/-260,-9,9);
+      if(Math.abs(v)>Math.abs(skewProxy)) skewProxy=v;
+    }
+  });
+  gsap.ticker.add(function(){
+    skewProxy = lerp(skewProxy,0,0.11);
+    skewSetter(skewProxy);
+  });
+}
+
+/* ================================================================
+   BOOT + DEV CONTRACT
+================================================================ */
+function boot(){
+  /* glyph-atlas warm-up: paint each display size once at boot so first
+     scroll-in of big type never pays the raster cost mid-film */
+  (function(){
+    var w = document.createElement('div');
+    w.setAttribute('aria-hidden','true');
+    w.style.cssText='position:fixed;left:0;top:0;opacity:0.001;pointer-events:none;z-index:-1;';
+    w.innerHTML =
+      '<span style="font-family:Unbounded;font-weight:700;font-size:3.6rem">Strategy becomes structure. THE MIND LAUNCH spark system.</span>'+
+      '<span style="font-family:Unbounded;font-weight:900;font-size:8rem">SOLENNE START YOUR SPARK</span>'+
+      '<span style="font-family:Unbounded;font-weight:700;font-size:5rem">We build brands that think.</span>'+
+      '<span style="font-family:\'Space Grotesk\';font-size:1.1rem">Warm the body face too.</span>';
+    document.body.appendChild(w);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){ w.remove(); });});
+  })();
+  contentTriggers();
+  if(REDUCED){
+    /* static poster: render the constellation once, show everything */
+    render(0.96, 1.2);
+    document.querySelectorAll('.beat').forEach(function(b){ b.style.opacity=1; b.style.transform='none'; });
+    window.__ready = true;
+    return;
+  }
+  requestAnimationFrame(tick);
+  if(JUMP!==null){
+    /* land pre-scrolled, fully settled */
+    gsap.set('.beat.hero .wordmark span',{y:0,yPercent:0});
+    scrollTo(0,+JUMP||0);
+    ScrollTrigger.refresh();
+    scrollTo(0,+JUMP||0);
+    var r = driver.getBoundingClientRect();
+    progress = clamp(-r.top/(r.height-innerHeight),0,1);  /* no lerp catch-up */
+    render(progress,1.234);
+    /* force-settle once-triggers that are above the fold */
+    ScrollTrigger.update();
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ window.__ready=true; }); });
+  } else {
+    heroReveal();
+    requestAnimationFrame(function(){ window.__ready=true; });
+  }
+}
+var booted=false;
+function bootOnce(){ if(!booted){ booted=true; boot(); } }
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(bootOnce);
+  setTimeout(bootOnce, 2500);   /* __ready must never hang on fonts */
+} else { bootOnce(); }
+
+/* console jank log */
+setInterval(function(){
+  var rep = window.__jankReport();
+  if(rep.count>60) console.log('[jank] p95='+rep.p95.toFixed(1)+'ms max='+rep.max.toFixed(1)+'ms');
+},2000);
+
+})();
+</script>
+</body>
+</html>
