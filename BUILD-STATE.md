@@ -48,6 +48,18 @@ Lane B (Seedance footage) remains blocked by egress policy — see below.
   isolated >50ms frames at first-paint of sections (positions non-deterministic — scheduler
   noise of the GPU-less rasterizer; one run fully clean). Judged sound for real hardware.
 
+## Higgsfield hosting deploy — BLOCKED (egress), website already created
+- User chose Higgsfield hosting. `create_website` succeeded:
+  website_id `5bd453bf-4131-412b-aeb4-314ac8c6172a`, slug `aisolenne`, type website
+  (category param required by server; "other" accepted). Live URL will be `aisolenne.<host>`.
+- `git clone https://apps-repos.higgsfield.ai/...` → CONNECT 403: **apps-repos.higgsfield.ai
+  denied by egress policy** (same class as cloudfront). Do not retry; policy change needed.
+- To unblock: allow `*.higgsfield.ai` (and ideally `*.cloudfront.net`) in the environment's
+  Network access, then: website_repo_access (fresh token) → clone → port index.html into the
+  TanStack Start app per get_website_creation_instructions flow (read references/website-flow.md
+  + scroll-scrub*.md; our GSAP/canvas film can be embedded) → app-meta.json cover+metadata
+  (references/app-cover.md) → commit/push → deploy_website → website_status for live URL.
+
 ## Lane B — still BLOCKED (unchanged)
 - Egress policy denies `d8j0ntlcm91z4.cloudfront.net` (403 CONNECT; also higgsfield.ai,
   jsdelivr, unpkg). Google Fonts + npm registry ARE allowed. Do not retry policy denials.
